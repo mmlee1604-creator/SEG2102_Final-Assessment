@@ -135,7 +135,7 @@ def make_items(orders, products):
                 "OrderID": order["OrderID"],
                 "ProductID": prod["ProductID"],
                 "Quantity": qty,
-                "UnitPrice": round(prod["Price"] * qty, 2),  # Product.Price x Quantity
+                "Subtotal": round(prod["Price"] * qty, 2),  # Product.Price x Quantity
             })
     return rows
 
@@ -154,9 +154,9 @@ def validate(customers, products, orders, items):
     assert all(len(p["ProductID"]) == 5 and len(p["ProductName"]) <= 50 and p["Price"] > 0
                and p["Price"] < 10**8 for p in products)
     price = {p["ProductID"]: p["Price"] for p in products}
-    assert all(i["UnitPrice"] == round(price[i["ProductID"]] * i["Quantity"], 2) for i in items)
+    assert all(i["Subtotal"] == round(price[i["ProductID"]] * i["Quantity"], 2) for i in items)
     assert all(len(o["OrderID"]) == 6 and o["Status"] in STATUSES for o in orders)
-    assert all(len(i["OrderItemID"]) == 6 and i["Quantity"] > 0 and i["UnitPrice"] > 0
+    assert all(len(i["OrderItemID"]) == 6 and i["Quantity"] > 0 and i["Subtotal"] > 0
                for i in items)
 
 
